@@ -1689,7 +1689,97 @@ export default function App() {
     };
   }, [orders, parts, clients]);
 
+  // ============================================================================
+  // SUB-COMPONENTS: MODALS & PRINT VIEWS
+  // ============================================================================
 
+  const renderRoleSwitcherBar = () => {
+    const pendingReqCount = accountRequests.filter(r => r.status === 'pending').length;
+    return (
+      <div className="bg-slate-950 text-white border-b border-slate-800 px-3 py-2 sticky top-0 z-50 shadow-md">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-300 font-semibold border border-blue-500/30">
+              <Sparkles className="w-3.5 h-3.5" />
+              وضع المعاينة السريعة للنظام
+            </span>
+            {currentClient ? (
+              <span className="text-slate-300">
+                المستخدم الحالي: <b className="text-white">{currentClient.name}</b> ({currentClient.phone})
+              </span>
+            ) : activeRole === 'admin' ? (
+              <span className="text-amber-300 font-bold">
+                بوابة الإدارة المركزية والمخازن
+              </span>
+            ) : (
+              <span className="text-slate-400">
+                أنت تتصفح كزائر غير مسجل — سجل دخولك برقم الهاتف أو اطلب فتح حساب جديد
+              </span>
+            )}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-1.5">
+            <button
+              onClick={() => handleSwitchRole('guest')}
+              className={`px-2.5 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 ${
+                activeRole === 'guest'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+              }`}
+            >
+              <User className="w-3.5 h-3.5" />
+              تصفح كزائر (طلب حساب / دخول)
+            </button>
+
+            <button
+              onClick={() => handleSwitchRole('cli_1')}
+              className={`px-2.5 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 ${
+                activeRole === 'cli_1'
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+              }`}
+            >
+              <Building2 className="w-3.5 h-3.5" />
+              حساب: مركز تك فيكس
+            </button>
+
+            <button
+              onClick={() => handleSwitchRole('cli_2')}
+              className={`px-2.5 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 ${
+                activeRole === 'cli_2'
+                  ? 'bg-purple-600 text-white shadow-sm'
+                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+              }`}
+            >
+              <Award className="w-3.5 h-3.5" />
+              حساب: شركة النور
+            </button>
+
+            <button
+              onClick={() => handleSwitchRole('admin')}
+              className={`px-3 py-1.5 rounded-lg font-extrabold transition flex items-center gap-1.5 ${
+                activeRole === 'admin'
+                  ? 'bg-amber-500 text-slate-950 shadow-sm ring-2 ring-amber-300'
+                  : 'bg-slate-800 text-amber-400 border border-amber-500/40 hover:bg-slate-700'
+              }`}
+            >
+              <Shield className="w-3.5 h-3.5" />
+              لوحة تحكم الإدارة
+              {pendingReqCount > 0 && (
+                <span className="px-1.5 py-0.2 rounded-full bg-rose-600 text-white text-[10px]">
+                  {pendingReqCount} طلبات حساب
+                </span>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // ============================================================================
+  // CLIENT STOREFRONT & ACCOUNT VIEWS (CLEAN, PROFESSIONAL, NO TIER LEAKS)
+  // ============================================================================
 
   const renderClientAvatar = (clientObj, sizeClass = 'w-10 h-10 text-sm') => {
     if (!clientObj) return null;
